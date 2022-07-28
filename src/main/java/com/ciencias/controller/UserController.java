@@ -6,7 +6,11 @@ import com.ciencias.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.validation.Valid;
 
 @Controller
 public class UserController {
@@ -26,10 +30,32 @@ public class UserController {
     public String getRegistro(Model model, Usuario usuario){
         var usuarios = usuarioService.getAllUsers();
         var roles = roleRepository.findAll();
-        model.addAttribute("userForm", usuario);
+        model.addAttribute("usuario", usuario);
         model.addAttribute("usuarios",usuarios);
         model.addAttribute("roles",roles);
+        model.addAttribute("listTab","active");
         return "user-form/user-view";
+    }
+
+    @PostMapping("/saveUser")
+    public String saveUser(@Valid Usuario usuario, Errors errors, Model model){
+        if(errors.hasErrors()){
+            model.addAttribute("usuarios",usuarioService.getAllUsers());
+            model.addAttribute("roles",roleRepository.findAll());
+            model.addAttribute("formTab","active");
+            return "user-form/user-view";
+        } else {
+            try {
+                usuarioService.saveUser(usuario);
+            } catch (Exception e) {
+                model.addAttribute("usuarios",usuarioService.getAllUsers());
+                model.addAttribute("formErrorMessage", e.getMessage());
+                model.addAttribute("roles",roleRepository.findAll());
+                model.addAttribute("formTab","active");
+                return "user-form/user-view";
+            }
+        }
+        return "redirect:/userForm";
     }
 
 }

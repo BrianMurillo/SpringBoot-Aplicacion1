@@ -1,6 +1,9 @@
 package com.ciencias.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
@@ -15,18 +18,26 @@ public class Usuario implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
+    @NotBlank
+    @Size(min = 3, max = 10, message = "El tamaño no se cumple")
     private String firstName;
     @Column
+    @NotBlank
     private String lastName;
     @Column
+    @NotBlank
+    @Email
     private String email;
     @Column
+    @NotBlank
     private String username;
     @Column
+    @NotBlank
     private String password;
 
     //La notacion hace que no se ocupe en la base de datos ese atributo, entonces se omite para la DB
     @Transient
+    @NotBlank
     private String confirmPassword;
 
     @ManyToMany(fetch = FetchType.LAZY)
