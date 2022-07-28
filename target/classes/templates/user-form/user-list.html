@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="table-responsive" th:if="${usuarios != null and !usuarios.empty}">
   <table id="userList" class="table table-bordered table-hover table-striped">
     <thead class="thead-light">
     <tr>
@@ -7,20 +7,23 @@
       <th scope="col">Last</th>
       <th scope="col">Username</th>
       <th scope="col">E-mail</th>
-      <th></th>
+      <th scope="col">Option</th>
     </tr>
     </thead>
     <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Cristian</td>
-      <td>Ruiz</td>
-      <td>c.r.username</td>
-      <td>c.r.username@blog.com</td>
+    <tr th:each="user:${usuarios}">
+      <td th:text="${user.id}"></td>
+      <td th:text="${user.firstName}"></td>
+      <td th:text="${user.lastName}"></td>
+      <td th:text="${user.username}"></td>
+      <td th:text="${user.email}"></td>
       <td>
         <a href="#"><i class="fas fa-edit"></i></a> | <a href="#"><i class="fas fa-user-times"></i></a>
       </td>
     </tr>
     </tbody>
   </table>
+</div>
+<div th:if="${usuarios == null or usuarios.empty}">
+  <h2>Sin datos</h2>
 </div>
