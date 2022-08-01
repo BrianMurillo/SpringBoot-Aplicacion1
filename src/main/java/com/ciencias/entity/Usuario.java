@@ -37,7 +37,6 @@ public class Usuario implements Serializable{
 
     //La notacion hace que no se ocupe en la base de datos ese atributo, entonces se omite para la DB
     @Transient
-    @NotBlank
     private String confirmPassword;
 
     @ManyToMany(fetch = FetchType.LAZY)

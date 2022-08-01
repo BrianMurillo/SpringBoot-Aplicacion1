@@ -27,6 +27,26 @@ public class UsuarioServiceImpl implements UsuarioService{
         return usuario;
     }
 
+    @Override
+    public Usuario getUserById(Long id) throws Exception {
+        return userRepository.findById(id).orElseThrow(() -> new Exception("El usuario no existe"));
+    }
+
+    @Override
+    public Usuario updateUser(Usuario fromUser) throws Exception {
+        Usuario toUser = getUserById(fromUser.getId());
+        mapUser(fromUser,toUser);
+        return userRepository.save(toUser);
+    }
+
+    protected void mapUser(Usuario from, Usuario to){
+        to.setUsername(from.getUsername());
+        to.setFirstName(from.getFirstName());
+        to.setLastName(from.getLastName());
+        to.setEmail(from.getEmail());
+        to.setRoles(from.getRoles());
+    }
+
     public boolean checkUsernameAvailable(Usuario user) throws Exception {
         Set<Usuario> userFound = userRepository.findByUsername(user.getUsername());
         if(!userFound.isEmpty()){

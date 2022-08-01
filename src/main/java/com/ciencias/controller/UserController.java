@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
@@ -58,4 +59,44 @@ public class UserController {
         return "redirect:/userForm";
     }
 
+    @GetMapping("/editUser/{id}")
+    public String getEditUserForm(Model model, @PathVariable(name="id")Long id) throws Exception {
+        var usuario = usuarioService.getUserById(id);
+        var usuarios = usuarioService.getAllUsers();
+        var roles = roleRepository.findAll();
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("usuarios",usuarios);
+        model.addAttribute("roles",roles);
+        model.addAttribute("formTab","active");
+        model.addAttribute("editMode","true");
+        return "user-form/user-view";
+    }
+
+    @PostMapping("/editUser")
+    public String postEditUser(@Valid Usuario user, Errors errors,Model model){
+        if(errors.hasErrors()){
+            model.addAttribute("usuarios",usuarioService.getAllUsers());
+            model.addAttribute("roles",roleRepository.findAll());
+            model.addAttribute("formTab","active");
+            model.addAttribute("editMode","true");
+            return "user-form/user-view";
+        } else {
+            try {
+                usuarioService.updateUser(user);
+            } catch (Exception e) {
+                model.addAttribute("usuarios",usuarioService.getAllUsers());
+                model.addAttribute("formErrorMessage", e.getMessage());
+                model.addAttribute("roles",roleRepository.findAll());
+                model.addAttribute("formTab","active");
+                model.addAttribute("editMode","true");
+                return "user-form/user-view";
+            }
+        }
+        return "redirect:/userForm";
+    }
+
+    @GetMapping("/userForm/cancel")
+    public String cancelEditUser(Model model){
+        return "redirect:/userForm";
+    }
 }
