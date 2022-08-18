@@ -39,6 +39,12 @@ public class UsuarioServiceImpl implements UsuarioService{
         return userRepository.save(toUser);
     }
 
+    @Override
+    public void deleteUsuario(Long id) throws Exception {
+        Usuario usuario = userRepository.findById(id).orElseThrow(()->new Exception("User not found for delete"+this.getClass().getName()));
+        userRepository.delete(usuario);
+    }
+
     protected void mapUser(Usuario from, Usuario to){
         to.setUsername(from.getUsername());
         to.setFirstName(from.getFirstName());

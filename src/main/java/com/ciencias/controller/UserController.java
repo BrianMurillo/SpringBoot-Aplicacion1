@@ -28,10 +28,10 @@ public class UserController {
     }
 
     @GetMapping("/userForm")
-    public String getRegistro(Model model, Usuario usuario){
+    public String getRegistro(Model model,Usuario user){
         var usuarios = usuarioService.getAllUsers();
         var roles = roleRepository.findAll();
-        model.addAttribute("usuario", usuario);
+        model.addAttribute("usuario", user);
         model.addAttribute("usuarios",usuarios);
         model.addAttribute("roles",roles);
         model.addAttribute("listTab","active");
@@ -98,5 +98,15 @@ public class UserController {
     @GetMapping("/userForm/cancel")
     public String cancelEditUser(Model model){
         return "redirect:/userForm";
+    }
+
+    @GetMapping("/deleteUser/{id}")
+    public String deleteUser(Model model, @PathVariable(name = "id")Long id) {
+        try {
+            usuarioService.deleteUsuario(id);
+        } catch (Exception e) {
+            model.addAttribute("listErrorMessage", e.getMessage());
+        }
+        return getRegistro(model, new Usuario());
     }
 }
