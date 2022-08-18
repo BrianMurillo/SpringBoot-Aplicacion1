@@ -19,12 +19,24 @@
       <td th:text="${user.email}"></td>
       <td>
         <a th:href="@{/editUser/} + ${user.id}"><i class="fas fa-edit"></i></a>
-        | <a href="#"><i class="fas fa-user-times"></i></a>
+        | <a href="#" th:onclick="'javascript:confirmDelete(\''+ ${user.id} +'\');'"><i class="fas fa-user-times"></i></a>
       </td>
     </tr>
     </tbody>
   </table>
+  <div class="alert-danger" th:if="${listErrorMessage}" th:text="${listErrorMessage}"></div>
 </div>
 <div th:if="${usuarios == null or usuarios.empty}">
   <h2>Sin datos</h2>
 </div>
+<script type="text/javascript">
+  function confirmDelete(id){
+    $('#deleteModal').modal('show');
+    $("#userIdHiddenInput").val(id);
+  }
+
+  function deleteUser(){
+    var id = $("#userIdHiddenInput").val();
+    window.location = "deleteUser/"+id;
+  }
+</script>
