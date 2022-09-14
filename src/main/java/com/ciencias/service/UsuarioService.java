@@ -1,5 +1,6 @@
 package com.ciencias.service;
 
+import com.ciencias.dto.ChangePasswordForm;
 import com.ciencias.entity.Usuario;
 
 public interface UsuarioService {
@@ -10,4 +11,6 @@ public interface UsuarioService {
 
     public Usuario updateUser(Usuario usuario) throws Exception;
     public void deleteUsuario(Long id)throws Exception;
+    public Usuario changePassword(ChangePasswordForm form) throws Exception;
+
 }
