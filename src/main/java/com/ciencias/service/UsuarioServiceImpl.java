@@ -1,5 +1,6 @@
 package com.ciencias.service;
 
+import com.ciencias.dto.ChangePasswordForm;
 import com.ciencias.entity.Usuario;
 import com.ciencias.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,28 @@ public class UsuarioServiceImpl implements UsuarioService{
     public void deleteUsuario(Long id) throws Exception {
         Usuario usuario = userRepository.findById(id).orElseThrow(()->new Exception("User not found for delete"+this.getClass().getName()));
         userRepository.delete(usuario);
+    }
+
+    @Override
+    public Usuario changePassword(ChangePasswordForm form) throws Exception{
+        Usuario user = userRepository
+                .findById( form.getId() )
+                .orElseThrow(() -> new Exception("UsernotFound in ChangePassword -"+this.getClass().getName()));
+
+        if(!user.getPassword().equals(form.getCurrentPassword())){
+            throw new Exception("Current Password invalido");
+        }
+
+        if(user.getPassword().equals(form.getNewPassword())){
+            throw new Exception("Nuevo debe ser diferente al password actual");
+        }
+
+        if(!form.getNewPassword().equals(form.getConfirmPassword())){
+            throw new Exception("Nuevo y current password no coinciden");
+        }
+
+        user.setPassword(form.getNewPassword());
+        return userRepository.save(user);
     }
 
     protected void mapUser(Usuario from, Usuario to){
